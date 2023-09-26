@@ -8,8 +8,7 @@ function App() {
   const addContact = () => {
     const filterArr = contactsJson.filter((element) => !contacts.includes(element));
     const randomIndex = Math.floor(Math.random() * filterArr.length);
-    const newActor = filterArr[randomIndex];
-    SetContacts(current => [...current, newActor] );
+    SetContacts(current => [...current, filterArr[randomIndex]] );
   };
 
   const sortPopularity = () => {
