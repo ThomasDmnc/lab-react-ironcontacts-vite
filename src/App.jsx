@@ -7,9 +7,32 @@ function App() {
 
   const addContact = () => {
     const filterArr = contactsJson.filter((element) => !contacts.includes(element));
-    const randomIndex = Math.floor(Math.random * filterArr.length);
-    contacts.push(filterArr[randomIndex]);
-    SetContacts(contacts);
+    const randomIndex = Math.floor(Math.random() * filterArr.length);
+    const newActor = filterArr[randomIndex];
+    SetContacts(current => [...current, newActor] );
+  };
+
+  const sortPopularity = () => {
+    const newArr = contacts.map((x) => x);
+    newArr.sort(function(a, b) {
+      return b.popularity - a.popularity;
+    });
+    SetContacts(newArr);
+  };
+
+  const sortName = () => {
+    const newArr = contacts.map((x) => x);
+    newArr.sort(function(a, b) {
+      const nameA = a.name.toLowerCase();
+      const nameB = b.name.toLowerCase();
+      return nameA.localeCompare(nameB);
+    });
+    SetContacts(newArr);
+  }; 
+
+  // Remove contacts 
+  function removeContact(value) {
+    SetContacts(contacts.filter((t) => t.id !== value))
   };
 
   return (
@@ -17,6 +40,8 @@ function App() {
       <h1>LAB | React IronContacts</h1>
 
     <button onClick={addContact} > Add a new contact.</button>  
+    <button onClick={sortName} > Sort contacts alphabetically </button>
+    <button onClick={sortPopularity} > Sort contacts by popularity </button>
 
       <table>
         <thead>
@@ -26,6 +51,7 @@ function App() {
             <th>Popularity</th>
             <th>Won an Oscar</th>
             <th>Won an Emmy</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -34,9 +60,10 @@ function App() {
                 <tr key={contact.id} >
                   <td> <img src={contact.pictureUrl} style={{height: 150}} /> </td>
                   <td>{contact.name}</td>
-                  <td>{contact.popularity}</td>
+                  <td>{contact.popularity.toFixed(2)}</td>
                   <td>{contact.wonOscar ? "🏆": ""}</td>
                   <td>{contact.wonEmmy ? "🏆": ""}</td>
+                  <td><button onClick={() => removeContact(contact.id)}> Remove Contact</button> </td>
                 </tr>
               )})
             }
